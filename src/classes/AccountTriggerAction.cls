@@ -6,6 +6,14 @@
  */
 public class AccountTriggerAction implements TriggerAction{
 	public void ExecuteTrigger() {
-  	System.debug('Trigger Called!');
+		List<Task> lstNewTasks = new List<Task>();
+    for(SObject acc : Trigger.New) {
+    	Task tskObj = new Task();
+      tskObj.Priority = 'High';
+      tskObj.Subject = 'Contact Account';
+      tskObj.WhatId = (Id)acc.get('Id');
+      lstNewTasks.add(tskObj);
+    }
+    insert lstNewTasks;
 	}
 }
