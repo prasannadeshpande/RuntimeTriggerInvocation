@@ -34,18 +34,17 @@ public class TriggerManager {
  * Author & LastModified By: Prasanna
  * LastModifiedDate:   20-06-2016
  */
- 
-  public Boolean isTriggerContextValid(Trigger_Definition__c TriggerDef) {
+	public Boolean isTriggerContextValid(Trigger_Definition__c TriggerDef) {
   	if((TriggerDef.Context__c == 'Before' && Trigger.isBefore == True) 
-    	|| (TriggerDef.Context__c == 'After' && Trigger.isAfter == True)
-    && (
-    	(TriggerDef.Insert__c  && Trigger.isInsert)
-			|| (TriggerDef.Delete__c  && Trigger.isDelete)
-			|| (TriggerDef.Update__c  && Trigger.isUpdate)
- 			|| (TriggerDef.Undelete__c  && Trigger.isUndelete)
-      )
+			|| (TriggerDef.Context__c == 'After' && Trigger.isAfter == True)
+		&& (
+				(TriggerDef.Insert__c  && Trigger.isInsert)
+				|| (TriggerDef.Delete__c  && Trigger.isDelete)
+				|| (TriggerDef.Update__c  && Trigger.isUpdate)
+				|| (TriggerDef.Undelete__c  && Trigger.isUndelete)
+			)
 		)
-    	return true;
+			return true;
 		return false;
 	}
 
@@ -57,16 +56,16 @@ public class TriggerManager {
  * LastModifiedDate:   20-06-2016
  */
 	public static TriggerAction getInstance(string className) {
-  	Type classtype = Type.forName(className);
+		Type classtype = Type.forName(className);
 		if(classtype == null) {
 			System.debug(LoggingLevel.Error, 'Failed to find type for ['+className+']');
 			return null;
 		}
 
 		// Create an instance to confirm the type
-    object classInstance = classtype.newInstance();
+		object classInstance = classtype.newInstance();
 		if(!(classInstance instanceOf TriggerAction)) {
-    	return null;
+			return null;
 		}
 		TriggerAction triggerActionInstance = (TriggerAction)classInstance;
 		return triggerActionInstance;
