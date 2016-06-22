@@ -20,10 +20,15 @@ public class TriggerManager {
 		for(Trigger_Definition__c tridef : triggerDefs) {
 			System.debug('Execute TriggerAction: ' + isTriggerContextValid(tridef));
 			if(isTriggerContextValid(tridef)) {
-				TriggerAction TrigAction = getInstance(tridef.Class_name__c);
-				if(TrigAction != null)
-        	TrigAction.ExecuteTrigger();
+				TriggerAction TrigAction = null;
+				try {
+					TrigAction = getInstance(tridef.Class_name__c);
+				} catch(Exception ex) {
+					System.debug('Exception :' + ex.getMessage());
 				}
+				if(TrigAction != null)
+					TrigAction.ExecuteTrigger();
+			}
 		}
 	}
 
@@ -35,10 +40,10 @@ public class TriggerManager {
  * LastModifiedDate:   20-06-2016
  */
 	public Boolean isTriggerContextValid(Trigger_Definition__c TriggerDef) {
-  	if((TriggerDef.Context__c == 'Before' && Trigger.isBefore == True) 
+		if((TriggerDef.Context__c == 'Before' && Trigger.isBefore == True) 
 			|| (TriggerDef.Context__c == 'After' && Trigger.isAfter == True)
 		&& (
-				(TriggerDef.Insert__c  && Trigger.isInsert)
+			(TriggerDef.Insert__c  && Trigger.isInsert)
 				|| (TriggerDef.Delete__c  && Trigger.isDelete)
 				|| (TriggerDef.Update__c  && Trigger.isUpdate)
 				|| (TriggerDef.Undelete__c  && Trigger.isUndelete)
@@ -67,6 +72,7 @@ public class TriggerManager {
 		if(!(classInstance instanceOf TriggerAction)) {
 			return null;
 		}
+		//Typecasting the instance into interface so as to validate that we have correct class reference.
 		TriggerAction triggerActionInstance = (TriggerAction)classInstance;
 		return triggerActionInstance;
 	}
